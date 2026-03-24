@@ -1,0 +1,26 @@
+- id: list_open_issues
+  prompt: "List all open issues in repo gourav/test-repo"
+  expected_tool_calls:
+    - github_list_issues
+  expected_output_contains:
+    - "open issues"
+  max_latency_ms: 3000
+  max_cost_usd: 0.005
+
+- id: create_issue_from_summary
+  prompt: "Create a GitHub issue titled 'Fix login bug' with a description explaining the login page throws a 500 error"
+  expected_tool_calls:
+    - github_create_issue
+  expected_output_contains:
+    - "created"
+  max_latency_ms: 5000
+  max_cost_usd: 0.005
+
+- id: check_pr_status
+  prompt: "Check the status of PR #42 in repo gourav/test-repo"
+  expected_tool_calls:
+    - github_get_pr_status
+  expected_output_contains:
+    - "pull request"
+  max_latency_ms: 3000
+  max_cost_usd: 0.005

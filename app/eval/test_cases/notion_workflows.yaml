@@ -1,0 +1,17 @@
+- id: search_workspace
+  prompt: "Search Notion for pages about project planning"
+  expected_tool_calls:
+    - notion_search
+  expected_output_contains:
+    - "results"
+  max_latency_ms: 3000
+  max_cost_usd: 0.005
+
+- id: create_summary_page
+  prompt: "Create a Notion page titled 'Weekly Summary' under parent page abc123 with a brief summary"
+  expected_tool_calls:
+    - notion_create_page
+  expected_output_contains:
+    - "created"
+  max_latency_ms: 5000
+  max_cost_usd: 0.005
