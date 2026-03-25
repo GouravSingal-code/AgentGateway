@@ -1,5 +1,5 @@
 import uuid
-from typing import List, Optional
+from typing import List
 
 import structlog
 from fastapi import APIRouter, Depends, Request
@@ -29,6 +29,7 @@ class RunResponse(BaseModel):
     tokens_used: dict
     cost_usd: float
     latency_ms: int
+    cache_hit: bool = False
 
 
 @router.post("", response_model=RunResponse)
@@ -39,6 +40,7 @@ async def run(
     _: None = Depends(check_rate_limit),
 ):
     tenant = request.state.tenant
+    run_id = uuid.uuid4()
 
     result = await run_agent(
         prompt=body.prompt,
@@ -47,9 +49,11 @@ async def run(
         max_steps=body.max_steps,
         tenant_id=tenant.id,
         db=db,
+        run_id=run_id,
     )
 
     run_record = AgentRun(
+        id=run_id,
         tenant_id=tenant.id,
         prompt=body.prompt,
         model=body.model,
@@ -80,4 +84,5 @@ async def run(
         tokens_used=result["tokens_used"],
         cost_usd=result["cost_usd"],
         latency_ms=result["latency_ms"],
+        cache_hit=result.get("cache_hit", False),
     )
